@@ -1,8 +1,8 @@
-const playVideo = require('./playVideo');
-const openCamera = ()=>{
+
+const openCamera = (callback)=>{
     navigator.mediaDevices.getUserMedia({audio:false,video:true})
     .then(stream=>{
-        playVideo(stream,"streamVideo");
+        callback(stream);
     })
     .catch(err=>console.log(err));
 }

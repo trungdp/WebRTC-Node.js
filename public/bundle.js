@@ -447,7 +447,7 @@ eval("var g;\n\n// This works in non-strict mode\ng = (function() {\n\treturn th
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("const openCamera = __webpack_require__(/*! ./openCamera */ \"./src/openCamera.js\");\nconst $ = __webpack_require__(/*! jquery */ \"./node_modules/jquery/dist/jquery.js\");\n// openCamera();\n\nconst Peer = __webpack_require__(/*! simple-peer */ \"./node_modules/simple-peer/index.js\");\n\nconst p = new Peer({initiator: location.hash === \"#1\",trickle :false});\n\np.on('signal',token=>{\n    $(\"#txtSignal\").val(JSON.stringify(token))\n});\n\np.on('connect',token=>{\n    setInterval(()=>console.log(Math.random()),3000);\n    \n});\n\np.on('data',data=>{\n    console.log(data);\n});\n\n$('#btn-Connect').click(()=>{\n    const friendSignal = JSON.parse($('#friendSignal').val());\n    p.signal(friendSignal);\n})\n\n//# sourceURL=webpack:///./src/app.js?");
+eval("const openCamera = __webpack_require__(/*! ./openCamera */ \"./src/openCamera.js\");\nconst $ = __webpack_require__(/*! jquery */ \"./node_modules/jquery/dist/jquery.js\");\nconst Peer = __webpack_require__(/*! simple-peer */ \"./node_modules/simple-peer/index.js\");\nconst playVideo = __webpack_require__(/*! ./playVideo */ \"./src/playVideo.js\");\n\nopenCamera((stream) => {\n    const p = new Peer({ initiator: location.hash === \"#1\", trickle: false, stream: stream });\n    playVideo(stream, \"streamVideo\");\n\n    p.on('signal', token => {\n        $(\"#txtSignal\").val(JSON.stringify(token))\n    });\n\n    p.on('stream',friendStream=>playVideo(friendStream,'friendVideo'));\n\n    $('#btn-Connect').click(() => {\n        const friendSignal = JSON.parse($('#friendSignal').val());\n        p.signal(friendSignal);\n    })\n});\n\n\n\n\n\n//# sourceURL=webpack:///./src/app.js?");
 
 /***/ }),
 
@@ -456,9 +456,9 @@ eval("const openCamera = __webpack_require__(/*! ./openCamera */ \"./src/openCam
   !*** ./src/openCamera.js ***!
   \***************************/
 /*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-eval("const playVideo = __webpack_require__(/*! ./playVideo */ \"./src/playVideo.js\");\nconst openCamera = ()=>{\n    navigator.mediaDevices.getUserMedia({audio:false,video:true})\n    .then(stream=>{\n        playVideo(stream,\"streamVideo\");\n    })\n    .catch(err=>console.log(err));\n}\n\nmodule.exports = openCamera;\n\n//# sourceURL=webpack:///./src/openCamera.js?");
+eval("\nconst openCamera = (callback)=>{\n    navigator.mediaDevices.getUserMedia({audio:false,video:true})\n    .then(stream=>{\n        callback(stream);\n    })\n    .catch(err=>console.log(err));\n}\n\nmodule.exports = openCamera;\n\n//# sourceURL=webpack:///./src/openCamera.js?");
 
 /***/ }),
 
